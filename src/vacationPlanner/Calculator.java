@@ -1,4 +1,5 @@
 package vacationPlanner;
+import java.util.*;
 
 public class Calculator {
 	
@@ -9,6 +10,7 @@ public class Calculator {
 		// Friend 1 owes $10, pay Friend 2 $10
 		// Friend 3 owes $5, pay Friend 2 $5	
 		
+		return "Calculator Placeholder";
 	}
 	
 	

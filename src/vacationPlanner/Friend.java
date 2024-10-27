@@ -4,7 +4,6 @@ import java.util.*;
 public class Friend implements Comparable<Friend>{
 	private String friendName;
 	private ArrayList<Item> items;
-	private double totalSpent;
 	
 	public Friend(String name) {
 		this(name, new ArrayList<Item>());
@@ -13,7 +12,7 @@ public class Friend implements Comparable<Friend>{
 	public Friend(String name, ArrayList<Item> items) { //deep copy
 		ArrayList<Item> items2 = new ArrayList<>();
 		for(int i = 0; i < items.size(); i++) {
-			items2.add(items.get(i));
+			items2.add(new Item(items.get(i)));
 		}
 		this.friendName = name;
 		this.items = items2;
@@ -31,10 +30,16 @@ public class Friend implements Comparable<Friend>{
 		// return a deep copy of the ArrayList
 		ArrayList<Item> copy = new ArrayList<>();
 		for(int i = 0; i < items.size(); i++) {
-			copy.add(this.items.get(i));
+			copy.add(new Item(this.items.get(i)));
 		}
 		return copy;
 	}
+	
+	public void addItem(Item item) {
+		Item itemCopy = new Item(item);
+		items.add(itemCopy);
+	}
+	
 	
 	public double getTotalSpent() {
 		 double totalSpent = 0;

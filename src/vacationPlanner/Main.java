@@ -1,6 +1,6 @@
 package vacationPlanner;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 	public static void main(String[] args) {
@@ -23,7 +23,8 @@ public class Main {
 		
 		switch(choice) {
 		case 1:    // 1. Calculator
-			calculator(input);
+			ArrayList<Friend> friends = getAllFriends(input);
+			System.out.println(Calculator.calculate(friends));
 			break;
 		case 2:    // 2. Exit
 			System.out.println("Exiting...");
@@ -63,7 +64,63 @@ public class Main {
 		   
 	   }
 	
-	public static void calculator(Scanner input) {
-	 System.out.println("To-Do - Calculator");
+	public static ArrayList<Friend> getAllFriends(Scanner input) {
+		boolean addFriends = true;
+		ArrayList<Friend> friends = new ArrayList<>();
+		while(addFriends) {
+			System.out.print("Friend Name: >> ");
+			String name = input.nextLine();
+			ArrayList<Item> items = getFriendItems(input);
+			friends.add(new Friend(name, items));
+			addFriends = getYesOrNoChoice(input, "Continue adding friends? ");
+		}
+		return friends;
+		
+	}
+	
+	public static ArrayList<Item> getFriendItems(Scanner input){
+		boolean addItems = true;
+		ArrayList<Item> items = new ArrayList<>();
+		System.out.println("Enter Items Bought: ");
+		while(addItems) {
+			// Get Item Name
+			System.out.print("Item Name >> ");
+			String itemName = input.nextLine();
+			
+			// Get Price
+			// TODO - Input Validation
+			System.out.print("Item Price >> ");
+			double price = input.nextDouble();
+			input.nextLine(); // Clear Buffer
+			
+			// Get Quantity
+			int quantity;
+			do {
+			System.out.print("Item Quantity >> ");
+			quantity = getUserNumericChoice(input);
+			}while(quantity < 1);
+			
+			items.add(new Item(itemName, price, quantity));
+			
+			addItems = getYesOrNoChoice(input, "Continue adding items?");
+		}
+		return items;
+	}
+	
+	public static boolean getYesOrNoChoice(Scanner input, String message) {
+		char answer = 'Y';
+		do {
+		System.out.print(message);
+		System.out.print(" Y / N >> ");
+		answer = input.nextLine().toUpperCase().charAt(0);
+		}while(answer != 'Y' && answer != 'N');
+		
+		if(answer == 'Y') {
+		return true;
+		}
+		
+		return false;
+		
+
 	}
 }

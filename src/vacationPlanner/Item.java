@@ -5,30 +5,30 @@ public class Item {
 	private double price;
 	private int quantity;
 	
+	// Do we want to have the possiblity of making an item that is "unknown"?
 	public Item() {
-		itemName = "unknown";
-		price = 0;
-		quantity = 0;
+		this("unknown", 0, 0);
 	}
 	
 	public Item(String itemName, double price, int quantity) {
-		this.itemName = itemName;
 		if (price < 0) {
 			throw new NegativeDataException("Invalid. The price cannot be a negative number.");
 		}
-		this.price = price;
 		if (quantity < 1) {
 			throw new NegativeDataException("Invalid. The quantity has to be at least a value of 1.");
 		}
+		this.itemName = itemName;
+		this.price = price;
 		this.quantity = quantity;
 	}
 	
 	public Item(String itemName, double price) {
-		this.itemName = itemName;
-		if (price < 0) {
-			throw new NegativeDataException("Invalid. The price cannot be a negative number.");
-		}
-		this.price = price;
+		this(itemName, price, 1);
+	}
+	
+	// Copy Constructor
+	public Item(Item item) {
+		this(item.getItemName(), item.price, item.quantity);
 	}
 	
 	public String getItemName() {

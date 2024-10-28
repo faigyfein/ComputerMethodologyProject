@@ -51,8 +51,9 @@ public class Friend implements Comparable<Friend>{
 	
 	@Override
 	public int compareTo(Friend other) {
-		//TODO
-		return 0;
+		Double thisTotal = this.getTotalSpent();
+		Double otherTotal = other.getTotalSpent();
+		return thisTotal.compareTo(otherTotal);
 	}
 	
 	

@@ -6,12 +6,18 @@ public class Calculator {
 
     public static String calculate(ArrayList<Friend> friends) {
 		// Loop through ArrayList
+    	
        final double totalCost=calculatePie(friends); // Calculate total spent
        final double requiredContribution=Math.floor((totalCost/friends.size()) * 100.0) / 100.0; // Amount each friend "owes"
        
 		ArrayList<Friend> underpaid=new ArrayList<Friend>();//create ArrayList to hold friends who overpayed
         ArrayList<Friend> overpaid=new ArrayList<Friend>();//create ArrayList to hold friends who underpayed
-        splitFriends(friends, underpaid, overpaid, requiredContribution);//call split friends to figure out which friends belogn where
+        splitFriends(friends, underpaid, overpaid
+        		, requiredContribution);//call split friends to figure out which friends belogn where
+        
+        if(underpaid.isEmpty()) {
+        	return "Nothing is owed";
+        }
         
         ArrayList<Payment> payments=new ArrayList<Payment>();//create ArrayList of payments due
 

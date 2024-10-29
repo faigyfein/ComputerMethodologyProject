@@ -25,15 +25,15 @@ public class Calculator {
         double owes;//create owes
         double paid;//creates payed
         int friendBeingPaid=0;//create and initialize friendBeingPayed to 0
-        double deserves=(overpaid.get(friendBeingPaid).getTotalSpent())-slice;//create and initialize deserves to the amount the friend being payed deserved
+        double deserves= Math.round(((overpaid.get(friendBeingPaid).getTotalSpent())-slice) * 100.0) / 100.0;//create and initialize deserves to the amount the friend being payed deserved
         for(int friend=0;friend<underpaid.size();friend++){//loop through the friends
             paid=0;//set paid to 0
-            owes=slice-underpaid.get(friend).getTotalSpent();//set owes to the amount friend owes
+            owes= Math.round((slice-underpaid.get(friend).getTotalSpent()) *100.0) /100.0;//set owes to the amount friend owes
             while(paid<owes){//check that owes is less than paid-aka friend in underpaid still owes money
                     if(owes<=deserves){//if owes is less than or equal to deserves-aka friend in underpaid owes less than friend in overpaid still deserves
                         payments.add(new Payment(underpaid.get(friend), overpaid.get(friendBeingPaid), owes));//create new Payment with friend being payed and owes as amount and add it to friend's payments field
                         deserves-=owes;//subtract amount paid(owes) from deserves
-                        paid+=owes;//add owes to paid(affectively breaking out of the while loop)
+                        paid+=owes;    //add owes to paid(affectively breaking out of the while loop)
                     }
                     
                     else{//aka friend in underpaid owes more than friend in overpaid still deserves

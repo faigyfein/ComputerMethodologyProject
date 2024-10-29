@@ -15,6 +15,8 @@ public class Main {
 		
 			switch(choice) {
 			case 1:    // 1. Calculator
+				System.out.println(" **** Calculator **** ");
+				System.out.println("Important Notification: Due to the Jewish laws of Ribbis, calculator rounds cents down. By following these calculations, users may be underpaid by a fraction of a cent");
 				ArrayList<Friend> friends = getAllFriends(input);
 				System.out.println(Calculator.calculate(friends));
 				break;

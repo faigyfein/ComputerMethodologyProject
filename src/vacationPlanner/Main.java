@@ -53,7 +53,7 @@ public class Main {
 				answer = input.nextInt();
 				validInput = true;
 			}catch (InputMismatchException e) {
-				System.out.println("That is not an integer. Please enter an inetger.");
+				System.out.println("That is not an integer. Please enter an integer.");
 				input.nextLine(); //clear invalid input
 			}
 		}

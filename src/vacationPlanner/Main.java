@@ -113,7 +113,7 @@ public class Main {
 			String itemName = input.nextLine();
 			
 			System.out.print("Item Price >> ");
-			double price = getDoubleInput(input);
+			double price = verifyPrice(input);
 			
 			System.out.print("Item Quantity >> ");
 			int quantity = verifyQuantity(input);
@@ -125,9 +125,28 @@ public class Main {
 		return items;
 	}
 	/**
-	 * This method verifies that the quantity is a valid positive integer.
+	 * This method verifies that the price is a valid positive double value (greater than 0).
 	 * @param input Scanner for reading user input.
-	 * @return The validated quantity.
+	 * @return The validated price (greater than 0).
+	 */
+	public static double verifyPrice(Scanner input) {
+		double price = 0;
+		boolean validInput = false;
+		
+		while(!validInput) {
+			price = getDoubleInput(input);
+			if(price > 0) {
+				validInput = true;
+			}else {
+				System.out.println("Invalid price. Must be greater than 0.");
+			}
+		}
+		return price;
+	}
+	/**
+	 * This method verifies that the quantity is a valid positive integer (1 or greater).
+	 * @param input Scanner for reading user input.
+	 * @return The validated quantity (greater than or equal to 1).
 	 */
 	public static int verifyQuantity(Scanner input) {
 		int quantity = 0;

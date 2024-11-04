@@ -83,7 +83,7 @@ public class Main {
 		
 	}
 	/**
-	 * This method collects a list of friends and their purchased items.
+	 * This method collects a list of friends (validating that a all friends names are unique) and their purchased items.
 	 * @param input Scanner for reading user input.
 	 * @return An ArrayList of Friend objects.
 	 */
@@ -94,12 +94,33 @@ public class Main {
 		while(addFriends) {
 			System.out.print("Friend Name: >> ");
 			String name = input.nextLine();
-			ArrayList<Item> items = getFriendItems(input);
-			friends.add(new Friend(name, items));
-			addFriends = getYesOrNoChoice(input, "Continue adding friends? ");
+			
+			try {
+				checkForDuplicateName(friends, name);
+				ArrayList<Item> items = getFriendItems(input);
+				friends.add(new Friend(name, items));
+				addFriends = getYesOrNoChoice(input, "Continue adding friends? ");
+			}catch (DuplicateNameException e) {
+				System.out.println(e.getMessage());
+			}
 		}
 		return friends;
 	}
+	/**
+	 * This method checks if a friend with the specified name already exists in the friends arrayList.
+	 * If a duplicate name is found it throws a DuplicateNameException.
+	 * @param friends An ArrayList of Friend objects.
+	 * @param name The specified name
+	 * @throws DuplicateNameException If a friend with the specified name already exists.
+	 */
+	public static void checkForDuplicateName(ArrayList<Friend> friends, String name) {
+		for(Friend friend : friends) {
+			if(friend.getFriendName().equalsIgnoreCase(name)) {
+				throw new DuplicateNameException("A friend with this name already exists.");
+			}
+		}
+	}
+	
 	/**
 	 * This method collects items purchased by a Friend.
 	 * @param input Scanner for reading user input.

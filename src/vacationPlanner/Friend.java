@@ -52,7 +52,7 @@ public class Friend implements Comparable<Friend>{
 	public double getTotalSpent() {
 		 double totalSpent = 0;
 		    for (Item item : items) {
-		        totalSpent += item.getTotalPrice(item.getItemName());
+		        totalSpent += item.getTotalPrice();
 		    }
 		    return totalSpent;
 	}

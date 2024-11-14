@@ -34,15 +34,21 @@ public class Item {
 	public String getItemName() {
 	    return itemName;
 	}
+	public double getPrice() {
+		return price;
+	}
+	public int getQuantity() {
+		return quantity;
+	}
 	
-	public double getTotalPrice(String item) {
+	public double getTotalPrice() {
 		return price * quantity;
 	}
 	
 	public String toString() {
 		StringBuilder str = new StringBuilder();
 		str.append("Item: " + quantity + " " + itemName);
-		str.append("Price: " + String.format("$%.2f", getTotalPrice(itemName)));
+		str.append("Price: " + String.format("$%.2f", getTotalPrice()));
 		return str.toString();
 	}
 }

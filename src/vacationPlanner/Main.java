@@ -6,7 +6,7 @@ public class Main {
 	public static void main(String[] args) {
 		ArrayList<Friend> friends=new ArrayList<>();//ArrayList of friends to be added to and calculated
 		Scanner input = new Scanner(System.in);
-		int numOfMainMenuChoices = 4;  // Number of options in the main menu - to be updated as menu is updated
+		int numOfMainMenuChoices = 5;  // Number of options in the main menu - to be updated as menu is updated
 		int choice = 0;                // Placeholder
 		boolean exit = false;
 		
@@ -15,22 +15,24 @@ public class Main {
 			choice = getIntegerInput(input);			
 		
 			switch(choice) {
-			case 1:    // 1. Calculate All Payments
+			case 1: //2. Add Friends
+				getFriends(friends, input);
+				break;
+			case 2: //3. Add Items
+				getFriendItems(friends, findFriend(friends, input), input);
+				break;
+			case 3:
+				displayAllFriends(friends);
+				break;
+			case 4:
 				System.out.println(" **** Calculate All Payments **** ");
 				System.out.println("Important Notification: Due to the Jewish laws of Ribbis, calculator rounds cents down. By following these calculations, users may be underpaid by a fraction of a cent");
 				System.out.println(Calculator.calculate(friends));
 				break;
-			case 2: //2. Add Friends
-				getFriends(friends, input);
-				break;
-			case 3: //3. Add Items
-				getFriendItems(friends, findFriend(friends, input), input);
-				break;
-			case 4:    // 4. Exit
+			case 5:
 				System.out.println("Exiting...");
 				exit = true;
 				break;
-			
 			default:
 				System.out.println("This is not a valid choice. Please reenter a number between 1 and " + numOfMainMenuChoices + ".");
 			}
@@ -43,10 +45,11 @@ public class Main {
 	 */
 	public static void displayMainMenu() {
 		System.out.println("Please choose one of the following options:");
-		System.out.println("1. Calculate All Payments");
-		System.out.println("2. Add Friends");
-		System.out.println("3. Add Items");
-		System.out.println("4. Exit");
+		System.out.println("1. Add Friends and their items");
+		System.out.println("2. Add Items to a Friend");
+		System.out.println("3. Display friends and all their items");
+		System.out.println("4. Calculate All Payments");
+		System.out.println("5. Exit");
 	}
 	/**
 	 * This method validates that the response from the user is an integer, if it is not an integer it continues to reprompt the user until the 
@@ -154,6 +157,22 @@ public class Main {
 			addItems = getYesOrNoChoice(input, "Continue adding items?");
 		}
 	}
+	
+	public static int findFriend(ArrayList<Friend> friends, Scanner input) {
+ 		boolean friendFound=false;
+ 		String friend;
+ 		while(!friendFound) {
+ 			System.out.print("Friend to add to >> ");
+ 			friend=input.nextLine();
+ 			for(int i=0;i<friends.size();i++) {
+ 				if(friend.equalsIgnoreCase(friends.get(i).getFriendName())) {
+ 					return i;
+ 				}
+ 			}
+ 			System.out.println("Friend not found, please try again:");
+ 		}
+		return 0;//extraneous, but allows it to compile
+	}
 	/**
 	 * This method verifies that the price is a valid positive double value (greater than 0).
 	 * @param input Scanner for reading user input.
@@ -209,24 +228,30 @@ public class Main {
 		if(answer == 'Y') {
 			return true;
 		}
-		
 		return false;
-		
+	}
+	
+
+	/**
+	 * This method displays all the Friends and their Items name, price and quantity.
+	 * @param friends The ArrayList of Friend objects.
+	 */
+
+	public static void displayAllFriends(ArrayList<Friend> friends) {
+		if(friends.isEmpty()) {
+			System.out.println("No friends added yet.");
+			return;
+		}
+		else{
+			System.out.println("***Friends and their items***");
+			for(Friend friend : friends) {
+				System.out.println("Friend: " + friend.getFriendName());
+				for(Item item : friend.getItems()) {
+					System.out.println(" - Item: " + item.getItemName() + ", Price: $" + item.getPrice() + "Quantity: " + item.getQuantity());
+				}			
+			}
+		}
 
 	}
-	public static int findFriend(ArrayList<Friend> friends, Scanner input) {
- 		boolean friendFound=false;
- 		String friend;
- 		while(!friendFound) {
- 			System.out.print("Friend to add to >> ");
- 			friend=input.nextLine();
- 			for(int i=0;i<friends.size();i++) {
- 				if(friend.equalsIgnoreCase(friends.get(i).getFriendName())) {
- 					return i;
- 				}
- 			}
- 			System.out.println("Friend not found, please try again:");
- 		}
-		return 0;//extraneous, but allows it to compile
-	}
+
 }

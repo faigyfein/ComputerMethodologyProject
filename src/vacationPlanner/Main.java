@@ -4,8 +4,9 @@ import java.util.*;
 
 public class Main {
 	public static void main(String[] args) {
+		ArrayList<Friend> friends=new ArrayList<>();//ArrayList of friends to be added to and calculated
 		Scanner input = new Scanner(System.in);
-		int numOfMainMenuChoices = 2;  // Number of options in the main menu - to be updated as menu is updated
+		int numOfMainMenuChoices = 4;  // Number of options in the main menu - to be updated as menu is updated
 		int choice = 0;                // Placeholder
 		boolean exit = false;
 		
@@ -14,16 +15,22 @@ public class Main {
 			choice = getIntegerInput(input);			
 		
 			switch(choice) {
-			case 1:    // 1. Calculator
-				System.out.println(" **** Calculator **** ");
+			case 1:    // 1. Calculate All Payments
+				System.out.println(" **** Calculate All Payments **** ");
 				System.out.println("Important Notification: Due to the Jewish laws of Ribbis, calculator rounds cents down. By following these calculations, users may be underpaid by a fraction of a cent");
-				ArrayList<Friend> friends = getAllFriends(input);
 				System.out.println(Calculator.calculate(friends));
 				break;
-			case 2:    // 2. Exit
+			case 2: //2. Add Friends
+				getFriends(friends, input);
+				break;
+			case 3: //3. Add Items
+				getFriendItems(friends, findFriend(friends, input), input);
+				break;
+			case 4:    // 4. Exit
 				System.out.println("Exiting...");
 				exit = true;
 				break;
+			
 			default:
 				System.out.println("This is not a valid choice. Please reenter a number between 1 and " + numOfMainMenuChoices + ".");
 			}
@@ -36,8 +43,10 @@ public class Main {
 	 */
 	public static void displayMainMenu() {
 		System.out.println("Please choose one of the following options:");
-		System.out.println("1. Calculator");
-		System.out.println("2. Exit");
+		System.out.println("1. Calculate All Payments");
+		System.out.println("2. Add Friends");
+		System.out.println("3. Add Items");
+		System.out.println("4. Exit");
 	}
 	/**
 	 * This method validates that the response from the user is an integer, if it is not an integer it continues to reprompt the user until the 
@@ -87,8 +96,7 @@ public class Main {
 	 * @param input Scanner for reading user input.
 	 * @return An ArrayList of Friend objects.
 	 */
-	public static ArrayList<Friend> getAllFriends(Scanner input) {
-		ArrayList<Friend> friends = new ArrayList<>();
+	public static void getFriends(ArrayList<Friend> friends, Scanner input) {
 		
 		boolean addFriends = true;
 		while(addFriends) {
@@ -97,14 +105,15 @@ public class Main {
 			
 			try {
 				checkForDuplicateName(friends, name);
-				ArrayList<Item> items = getFriendItems(input);
-				friends.add(new Friend(name, items));
+				System.out.print("Zelle Information: >> ");
+				String zelleInfo = input.nextLine();
+				friends.add(new Friend(name, new ArrayList<Item>(), zelleInfo));
+				getFriendItems(friends, friends.size()-1, input);
 				addFriends = getYesOrNoChoice(input, "Continue adding friends? ");
 			}catch (DuplicateNameException e) {
 				System.out.println(e.getMessage());
 			}
 		}
-		return friends;
 	}
 	/**
 	 * This method checks if a friend with the specified name already exists in the friends arrayList.
@@ -126,9 +135,8 @@ public class Main {
 	 * @param input Scanner for reading user input.
 	 * @return An ArrayList of Item objects.
 	 */
-	public static ArrayList<Item> getFriendItems(Scanner input){
-		ArrayList<Item> items = new ArrayList<>();
-		System.out.println("Enter Items Bought: ");
+	public static void getFriendItems(ArrayList<Friend> friends, int index, Scanner input){
+		System.out.println("Enter Item Bought: ");
 		
 		boolean addItems = true;
 		while(addItems) {
@@ -142,10 +150,9 @@ public class Main {
 			int quantity = verifyQuantity(input);
 			
 			
-			items.add(new Item(itemName, price, quantity));
+			friends.get(index).addItem(new Item(itemName, price, quantity));
 			addItems = getYesOrNoChoice(input, "Continue adding items?");
 		}
-		return items;
 	}
 	/**
 	 * This method verifies that the price is a valid positive double value (greater than 0).
@@ -206,5 +213,20 @@ public class Main {
 		return false;
 		
 
+	}
+	public static int findFriend(ArrayList<Friend> friends, Scanner input) {
+ 		boolean friendFound=false;
+ 		String friend;
+ 		while(!friendFound) {
+ 			System.out.print("Friend to add to >> ");
+ 			friend=input.nextLine();
+ 			for(int i=0;i<friends.size();i++) {
+ 				if(friend.equalsIgnoreCase(friends.get(i).getFriendName())) {
+ 					return i;
+ 				}
+ 			}
+ 			System.out.println("Friend not found, please try again:");
+ 		}
+		return 0;//extraneous, but allows it to compile
 	}
 }

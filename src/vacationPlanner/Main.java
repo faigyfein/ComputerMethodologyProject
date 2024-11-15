@@ -192,10 +192,11 @@ public class Main {
 	 * @return An ArrayList of Item objects.
 	 */
 	public static void getFriendItems(ArrayList<Friend> friends, int index, Scanner input){
-		System.out.println("Enter Item Bought: ");
+		boolean addItems = getYesOrNoChoice(input, "Add Items to Friend? ");
 		
-		boolean addItems = true;
 		while(addItems) {
+			System.out.println("Enter Item Bought: ");
+			
 			System.out.print("Item Name >> ");
 			String itemName = input.nextLine();
 			

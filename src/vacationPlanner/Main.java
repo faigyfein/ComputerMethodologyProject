@@ -30,9 +30,18 @@ public class Main {
 				System.out.println(Calculator.calculate(friends));
 				break;
 			case 5:
-		        System.out.print("Which city are you located at?");
+		        System.out.print("Which city are you located at? ");
 		        String city = input.nextLine();
-		        Weather.getWeather(city);
+		        System.out.print("Would you like the temperature in °C or °F? ");
+		        char temp = input.nextLine().toUpperCase().charAt(0);
+		        while (temp != 'C' && temp != 'F') {
+		        	System.out.print("Invalid. Please enter either a "
+		        			+ "C for celsius or a F for fahrenheit. ");
+		        	temp = input.nextLine().toUpperCase().charAt(0);
+		        }
+		        Weather.getWeather(city, temp);
+		        System.out.println();
+		        break;
 			case 6:
 				System.out.println("Exiting...");
 				exit = true;

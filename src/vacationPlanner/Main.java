@@ -25,22 +25,10 @@ public class Main {
 				displayAllFriends(friends);
 				break;
 			case 4:
-				System.out.println(" **** Calculate All Payments **** ");
-				System.out.println("Important Notification: Due to the Jewish laws of Ribbis, calculator rounds cents down. By following these calculations, users may be underpaid by a fraction of a cent");
-				System.out.println(Calculator.calculate(friends));
+				calculateFriendPayments(friends);
 				break;
 			case 5:
-		        System.out.print("Which city are you located at? ");
-		        String city = input.nextLine();
-		        System.out.print("Would you like the temperature in °C or °F? ");
-		        char temp = input.nextLine().toUpperCase().charAt(0);
-		        while (temp != 'C' && temp != 'F') {
-		        	System.out.print("Invalid. Please enter either a "
-		        			+ "C for celsius or a F for fahrenheit. ");
-		        	temp = input.nextLine().toUpperCase().charAt(0);
-		        }
-		        Weather.getWeather(city, temp);
-		        System.out.println();
+		        weather(input);
 		        break;
 			case 6:
 				System.out.println("Exiting...");
@@ -51,6 +39,57 @@ public class Main {
 			}
 		}while(!exit);
 		
+	}
+
+	/**
+	 * @param input Scanner for user input
+	 * This method organizes the method calls to execute the weather functionality
+	 */
+	public static void weather(Scanner input) {
+		String city = getCityChoiceFromUser(input);
+		char temp = getMeasurementTypeFromUser(input);
+		Weather.getWeather(city, temp);
+		System.out.println();
+	}
+
+	/**
+	 * 
+	 * @param input Scanner for user input
+	 * Gets and validates user choice for degrees in C or F
+	 * @return C or F
+	 */
+	public static char getMeasurementTypeFromUser(Scanner input) {
+		System.out.print("Would you like the temperature in °C or °F? ");
+		char temp = input.nextLine().toUpperCase().charAt(0);
+		while (temp != 'C' && temp != 'F') {
+			System.out.print("Invalid. Please enter either a "
+					+ "C for celsius or a F for fahrenheit. ");
+			temp = input.nextLine().toUpperCase().charAt(0);
+		}
+		return temp;
+	}
+
+	/**
+	 * 
+	 * @param input Scanner for User Input
+	 * Gets the city choice from the user
+	 * @return City Name
+	 */
+	public static String getCityChoiceFromUser(Scanner input) {
+		System.out.print("Which city are you located at? ");
+		String city = input.nextLine();
+		return city;
+	}
+
+	/**
+	 * 
+	 * @param friends ArrayList of Friends
+	 * Calculate which friend pays for what, print results
+	 */
+	public static void calculateFriendPayments(ArrayList<Friend> friends) {
+		System.out.println(" **** Calculate All Payments **** ");
+		System.out.println("Important Notification: Due to the Jewish laws of Ribbis, calculator rounds cents down. By following these calculations, users may be underpaid by a fraction of a cent");
+		System.out.println(Calculator.calculate(friends));
 	}
 
 	/**
@@ -120,31 +159,31 @@ public class Main {
 			System.out.print("Friend Name: >> ");
 			String name = input.nextLine();
 			
-			try {
-				checkForDuplicateName(friends, name);
+			if(duplicateName(friends, name)) {
+				System.out.println("Friend already exists");
+			}else {
 				System.out.print("Zelle Information: >> ");
 				String zelleInfo = input.nextLine();
-				friends.add(new Friend(name, new ArrayList<Item>(), zelleInfo));
+				friends.add(new Friend(name, zelleInfo));
 				getFriendItems(friends, friends.size()-1, input);
 				addFriends = getYesOrNoChoice(input, "Continue adding friends? ");
-			}catch (DuplicateNameException e) {
-				System.out.println(e.getMessage());
 			}
+			
 		}
 	}
 	/**
 	 * This method checks if a friend with the specified name already exists in the friends arrayList.
-	 * If a duplicate name is found it throws a DuplicateNameException.
+	 * If a duplicate name is found, it returns true. If not a duplicate name, returns false.
 	 * @param friends An ArrayList of Friend objects.
 	 * @param name The specified name
-	 * @throws DuplicateNameException If a friend with the specified name already exists.
 	 */
-	public static void checkForDuplicateName(ArrayList<Friend> friends, String name) {
+	public static boolean duplicateName(ArrayList<Friend> friends, String name) {
 		for(Friend friend : friends) {
 			if(friend.getFriendName().equalsIgnoreCase(name)) {
-				throw new DuplicateNameException("A friend with this name already exists.");
+				return true;
 			}
 		}
+		return false;
 	}
 	
 	/**
@@ -172,6 +211,12 @@ public class Main {
 		}
 	}
 	
+	/**
+	 * Asks user for Friend to add to, and returns the index of the chosen friend
+	 * @param friends ArrayList of Friend objects
+	 * @param input Scanner for user input
+	 * @return index of chosen friend
+	 */
 	public static int findFriend(ArrayList<Friend> friends, Scanner input) {
  		boolean friendFound=false;
  		String friend;
@@ -185,7 +230,7 @@ public class Main {
  			}
  			System.out.println("Friend not found, please try again:");
  		}
-		return 0;//extraneous, but allows it to compile
+		return 0; //extraneous, but allows it to compile
 	}
 	/**
 	 * This method verifies that the price is a valid positive double value (greater than 0).

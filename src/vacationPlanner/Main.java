@@ -6,7 +6,7 @@ public class Main {
 	public static void main(String[] args) {
 		ArrayList<Friend> friends=new ArrayList<>();//ArrayList of friends to be added to and calculated
 		Scanner input = new Scanner(System.in);
-		int numOfMainMenuChoices = 5;  // Number of options in the main menu - to be updated as menu is updated
+		int numOfMainMenuChoices = 6;  // Number of options in the main menu - to be updated as menu is updated
 		int choice = 0;                // Placeholder
 		boolean exit = false;
 		
@@ -30,6 +30,10 @@ public class Main {
 				System.out.println(Calculator.calculate(friends));
 				break;
 			case 5:
+		        System.out.print("Which city are you located at?");
+		        String city = input.nextLine();
+		        Weather.getWeather(city);
+			case 6:
 				System.out.println("Exiting...");
 				exit = true;
 				break;
@@ -49,7 +53,8 @@ public class Main {
 		System.out.println("2. Add Items to a Friend");
 		System.out.println("3. Display friends and all their items");
 		System.out.println("4. Calculate All Payments");
-		System.out.println("5. Exit");
+		System.out.println("5. Find out the weather in your location");
+		System.out.println("6. Exit");
 	}
 	/**
 	 * This method validates that the response from the user is an integer, if it is not an integer it continues to reprompt the user until the 

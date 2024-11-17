@@ -6,36 +6,27 @@ public class Main {
 	public static void main(String[] args) {
 		ArrayList<Friend> friends=new ArrayList<>();//ArrayList of friends to be added to and calculated
 		Scanner input = new Scanner(System.in);
-		int numOfMainMenuChoices = 6;  // Number of options in the main menu - to be updated as menu is updated
+		int numOfMainMenuChoices = 3;  // Number of options in the main menu - to be updated as menu is updated
+		int numOfCalculatorMenuChoices = 5;  // Number of options in the Calculator menu - to be updated as Calculator is updated
 		int choice = 0;                // Placeholder
 		boolean exit = false;
 		
 		do {                // Do while choice is not to exit
 			displayMainMenu();
 			choice = getIntegerInput(input);			
-		
 			switch(choice) {
-			case 1: //2. Add Friends
-				getFriends(friends, input);
-				break;
-			case 2: //3. Add Items
-				getFriendItems(friends, findFriend(friends, input), input);
-				break;
-			case 3:
-				displayAllFriends(friends);
-				break;
-			case 4:
-				calculateFriendPayments(friends);
-				break;
-			case 5:
-		        weather(input);
-		        break;
-			case 6:
-				System.out.println("Exiting...");
-				exit = true;
-				break;
-			default:
-				System.out.println("This is not a valid choice. Please reenter a number between 1 and " + numOfMainMenuChoices + ".");
+				case 1://Costs Calculator
+					executeCalculatorMenu(friends, input, numOfCalculatorMenuChoices);
+					break;
+				case 2://Weather
+			        weather(input);
+			        break;
+				case 3://Exit
+					System.out.println("Exiting...");
+					exit = true;
+					break;
+				default:
+					System.out.println("This is not a valid choice. Please reenter a number between 1 and " + numOfMainMenuChoices + ".");
 			}
 		}while(!exit);
 		
@@ -97,12 +88,53 @@ public class Main {
 	 */
 	public static void displayMainMenu() {
 		System.out.println("Please choose one of the following options:");
+		System.out.println("1. Payments Calculator");
+		System.out.println("2. Find out the weather in your location");
+		System.out.println("3. Exit");
+	}
+	/**
+	 * This method will display the cost calculator menu.
+	 */
+	public static void displayPaymentsCalculatorMenu() {
+		System.out.println("Please choose one of the following options:");
 		System.out.println("1. Add Friends and their items");
 		System.out.println("2. Add Items to a Friend");
 		System.out.println("3. Display friends and all their items");
 		System.out.println("4. Calculate All Payments");
-		System.out.println("5. Find out the weather in your location");
-		System.out.println("6. Exit");
+		System.out.println("5. Exit");
+	}
+	/**
+	 * This method will display the cost calculator menu and then handle option choice, calling the necessary methods.
+	 */
+	public static void executeCalculatorMenu(ArrayList<Friend> friends, Scanner input, int numOfCalculatorMenuChoices) {
+		int numOfMenuChoices=numOfCalculatorMenuChoices;
+		int choice;
+		boolean exit=false;
+		do{
+			displayPaymentsCalculatorMenu();
+			choice = getIntegerInput(input);	
+
+			switch(choice) {
+				case 1: //2. Add Friends
+					getFriends(friends, input);
+					break;
+				case 2: //3. Add Items
+					getFriendItems(friends, findFriend(friends, input), input);
+					break;
+				case 3:
+					displayAllFriends(friends);
+					break;
+				case 4:
+					calculateFriendPayments(friends);
+					break;
+				case 5:
+					System.out.println("Exiting...");
+					exit = true;
+					break;
+				default:
+					System.out.println("This is not a valid choice. Please reenter a number between 1 and " + numOfMenuChoices + ".");
+			}
+		}while(!exit);
 	}
 	/**
 	 * This method validates that the response from the user is an integer, if it is not an integer it continues to reprompt the user until the 
@@ -153,8 +185,8 @@ public class Main {
 	 * @return An ArrayList of Friend objects.
 	 */
 	public static void getFriends(ArrayList<Friend> friends, Scanner input) {
-		
 		boolean addFriends = true;
+		boolean addItems;
 		while(addFriends) {
 			System.out.print("Friend Name: >> ");
 			String name = input.nextLine();
@@ -165,7 +197,10 @@ public class Main {
 				System.out.print("Zelle Information: >> ");
 				String zelleInfo = input.nextLine();
 				friends.add(new Friend(name, zelleInfo));
-				getFriendItems(friends, friends.size()-1, input);
+				addItems= getYesOrNoChoice(input, "Add Items to Friend? ");
+				if(addItems) {
+					getFriendItems(friends, friends.size()-1, input);
+				}
 				addFriends = getYesOrNoChoice(input, "Continue adding friends? ");
 			}
 			
@@ -192,9 +227,8 @@ public class Main {
 	 * @return An ArrayList of Item objects.
 	 */
 	public static void getFriendItems(ArrayList<Friend> friends, int index, Scanner input){
-		boolean addItems = getYesOrNoChoice(input, "Add Items to Friend? ");
-		
-		while(addItems) {
+		boolean addItems;
+		do {
 			System.out.println("Enter Item Bought: ");
 			
 			System.out.print("Item Name >> ");
@@ -208,8 +242,8 @@ public class Main {
 			
 			
 			friends.get(index).addItem(new Item(itemName, price, quantity));
-			addItems = getYesOrNoChoice(input, "Continue adding items?");
-		}
+			addItems= getYesOrNoChoice(input, "Continue adding items?");
+		}while(addItems);
 	}
 	
 	/**
@@ -307,7 +341,7 @@ public class Main {
 			for(Friend friend : friends) {
 				System.out.println("Friend: " + friend.getFriendName());
 				for(Item item : friend.getItems()) {
-					System.out.println(" - Item: " + item.getItemName() + ", Price: $" + item.getPrice() + "Quantity: " + item.getQuantity());
+					System.out.println(" - Item: " + item.getItemName() + ", Price: $" + item.getPrice() + ", Quantity: " + item.getQuantity());
 				}			
 			}
 		}

@@ -326,7 +326,7 @@ public class Main {
 	}
 	
 
-	/**
+	/**  
 	 * This method displays all the Friends and their Items name, price and quantity.
 	 * @param friends The ArrayList of Friend objects.
 	 */

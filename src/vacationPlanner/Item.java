@@ -47,9 +47,8 @@ public class Item {
 	
 	public String toString() {
 		StringBuilder str = new StringBuilder();
-		str.append("- Item: " + itemName);
+		str.append("- Item: " + quantity + " " + itemName);
 		str.append(", Price: " + String.format("$%.2f", getTotalPrice()));
-		str.append(", Quantity: " + quantity);
 		return str.toString();
 	}
 }

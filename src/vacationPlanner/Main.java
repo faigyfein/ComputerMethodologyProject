@@ -79,7 +79,8 @@ public class Main {
 	 */
 	public static void calculateFriendPayments(ArrayList<Friend> friends) {
 		System.out.println(" **** Calculate All Payments **** ");
-		System.out.println("Important Notification: Due to the Jewish laws of Ribbis, calculator rounds cents down. By following these calculations, users may be underpaid by a fraction of a cent");
+		System.out.println("Important Notification: Due to the Jewish laws of Ribbis, calculator rounds cents down.");
+		System.out.println("By following these calculations, users may be underpaid by a fraction of a cent.");
 		System.out.println(Calculator.calculate(friends));
 	}
 
@@ -340,9 +341,14 @@ public class Main {
 			System.out.println("***Friends and their items***");
 			for(Friend friend : friends) {
 				System.out.println("Friend: " + friend.getFriendName());
+				if(friend.getItems().isEmpty()) {
+					System.out.println("No items added.");
+				}
+				else {
 				for(Item item : friend.getItems()) {
-					System.out.println(" - Item: " + item.getItemName() + ", Price: $" + item.getPrice() + ", Quantity: " + item.getQuantity());
-				}			
+					System.out.println(item.toString());
+					}
+				}		
 			}
 		}
 

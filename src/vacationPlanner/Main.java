@@ -98,11 +98,12 @@ public class Main {
 	 */
 	public static void displayPaymentsCalculatorMenu() {
 		System.out.println("Please choose one of the following options:");
-		System.out.println("1. Add Friends and their items");
+		System.out.println("1. Add Friends, their items, and their activites");
 		System.out.println("2. Add Items to a Friend");
-		System.out.println("3. Display friends and all their items");
-		System.out.println("4. Calculate All Payments");
-		System.out.println("5. Exit");
+		System.out.println("3. Add Activities to a Friend");
+		System.out.println("4. Display friends, all their items, and all their activities");
+		System.out.println("5. Calculate All Payments");
+		System.out.println("6. Exit");
 	}
 	/**
 	 * This method will display the cost calculator menu and then handle option choice, calling the necessary methods.
@@ -123,12 +124,15 @@ public class Main {
 					getFriendItems(friends, findFriend(friends, input), input);
 					break;
 				case 3:
-					displayAllFriends(friends);
+					getFriendActivities(friends, findFriend(friends, input), input);
 					break;
 				case 4:
-					calculateFriendPayments(friends);
+					displayAllFriends(friends);
 					break;
 				case 5:
+					calculateFriendPayments(friends);
+					break;
+				case 6:
 					System.out.println("Exiting...");
 					exit = true;
 					break;
@@ -181,13 +185,14 @@ public class Main {
 		
 	}
 	/**
-	 * This method collects a list of friends (validating that a all friends names are unique) and their purchased items.
+	 * This method collects a list of friends (validating that a all friends names are unique), their purchased items and activities.
 	 * @param input Scanner for reading user input.
 	 * @return An ArrayList of Friend objects.
 	 */
 	public static void getFriends(ArrayList<Friend> friends, Scanner input) {
 		boolean addFriends = true;
 		boolean addItems;
+		boolean addActivities;
 		while(addFriends) {
 			System.out.print("Friend Name: >> ");
 			String name = input.nextLine();
@@ -198,10 +203,17 @@ public class Main {
 				System.out.print("Zelle Information: >> ");
 				String zelleInfo = input.nextLine();
 				friends.add(new Friend(name, zelleInfo));
+				
 				addItems= getYesOrNoChoice(input, "Add Items to Friend? ");
 				if(addItems) {
 					getFriendItems(friends, friends.size()-1, input);
 				}
+				
+				addActivities = getYesOrNoChoice(input, "Add Activities to Friend? ");
+				if(addActivities) {
+					getFriendActivities(friends, friends.size() - 1, input);
+				}
+				
 				addFriends = getYesOrNoChoice(input, "Continue adding friends? ");
 			}
 			
@@ -224,8 +236,9 @@ public class Main {
 	
 	/**
 	 * This method collects items purchased by a Friend.
+	 * @param friends The ArrayList of Friends.
+	 * @param index The index in the friends arrayList of the friends to add to.
 	 * @param input Scanner for reading user input.
-	 * @return An ArrayList of Item objects.
 	 */
 	public static void getFriendItems(ArrayList<Friend> friends, int index, Scanner input){
 		boolean addItems;
@@ -245,6 +258,27 @@ public class Main {
 			friends.get(index).addItem(new Item(itemName, price, quantity));
 			addItems= getYesOrNoChoice(input, "Continue adding items?");
 		}while(addItems);
+	}
+	/**
+	 * This method collects activities purchased by a Friend.
+	 * @param friends The ArrayList of Friends.
+	 * @param index The index in the friends arrayList of the friends to add to.
+	 * @param input Scanner for reading user input.
+	 */
+	public static void getFriendActivities(ArrayList<Friend> friends, int index, Scanner input) {
+		boolean addActivities;
+		do {
+			System.out.println("Enter Activity Name: ");
+			
+			System.out.println("Activity Name >> ");
+			String activityName = input.nextLine();
+			
+			System.out.println("Activity Price >> ");
+			double price = verifyPrice(input);
+			
+			friends.get(index).addActivity(new Activity(activityName, price));
+			addActivities = getYesOrNoChoice(input, "Continue adding activities?");
+		}while(addActivities);
 	}
 	
 	/**
@@ -328,7 +362,7 @@ public class Main {
 	
 
 	/**  
-	 * This method displays all the Friends and their Items name, price and quantity.
+	 * This method displays all the Friends, their Items name and price and quantity, and their Activities name and price.
 	 * @param friends The ArrayList of Friend objects.
 	 */
 
@@ -338,17 +372,22 @@ public class Main {
 			return;
 		}
 		else{
-			System.out.println("***Friends and their items***");
+			System.out.println("***Friends, their items, and their activities***");
 			for(Friend friend : friends) {
 				System.out.println("Friend: " + friend.getFriendName());
-				if(friend.getItems().isEmpty()) {
+				
+				if(friend.getItems().isEmpty()) 
 					System.out.println("No items added.");
-				}
 				else {
-				for(Item item : friend.getItems()) {
-					System.out.println(item.toString());
-					}
-				}		
+					for(Item item : friend.getItems()) 
+						System.out.println(item.toString());
+				}
+				if(friend.getActivities().isEmpty()) 
+					System.out.println("No activities added.");
+				else {
+					for(Activity activity : friend.getActivities()) 
+						System.out.println(activity.toString());
+				}
 			}
 		}
 

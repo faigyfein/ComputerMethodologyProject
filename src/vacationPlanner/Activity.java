@@ -1,25 +1,30 @@
 package vacationPlanner;
 
-public class Activity {
+import java.time.LocalDateTime;
+
+public class Activity implements Comparable<Activity> {
 		private String activityName;
+		private LocalDateTime activityTime;
 		private double price;
 		
-		// Do we want to have the possibility of making an Activity that is "unknown"?
-		public Activity() {
-			this("unknown", 0);
-		}
 		
-		public Activity(String activityName, double price) {
+		public Activity(String activityName, double price, LocalDateTime time) {
 			if (price < 0) {
 				throw new NegativeDataException("Invalid. The price cannot be a negative number.");
 			}
 			this.activityName = activityName;
 			this.price = price;
+			this.activityTime = time;
 		}
+		
+		public Activity(String activityName, double price, int year, int month, int day, int hour, int minute) {
+			this(activityName, price, LocalDateTime.of(year, month, day, hour, minute));
+		}
+		
 		
 		// Copy Constructor
 		public Activity(Activity activity) {
-			this(activity.getActivityName(), activity.price);
+			this(activity.getActivityName(), activity.price, activity.activityTime);
 		}
 		
 		public String getActivityName() {
@@ -31,8 +36,14 @@ public class Activity {
 		
 		public String toString() {
 			StringBuilder str = new StringBuilder();
-			str.append("- Activity: " + activityName);
+			str.append("- Time: " + activityTime);
+			str.append(", Activity: " + activityName);
 			str.append(", Price: " + String.format("$%.2f", getPrice()));
 			return str.toString();
+		}
+
+		@Override
+		public int compareTo(Activity o) {
+			return this.activityTime.compareTo(o.activityTime);
 		}
 }

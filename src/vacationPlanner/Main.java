@@ -1,40 +1,92 @@
 package vacationPlanner;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class Main {
 	public static void main(String[] args) {
-		ArrayList<Friend> friends=new ArrayList<>();//ArrayList of friends to be added to and calculated
+		ArrayList<Friend> friends = new ArrayList<>();// ArrayList of friends to be added to and calculated
 		Scanner input = new Scanner(System.in);
-		int numOfMainMenuChoices = 3;  // Number of options in the main menu - to be updated as menu is updated
-		int numOfCalculatorMenuChoices = 5;  // Number of options in the Calculator menu - to be updated as Calculator is updated
-		int choice = 0;                // Placeholder
+		int numOfMainMenuChoices = 4; // Number of options in the main menu - to be updated as menu is updated
+		int numOfCalculatorMenuChoices = 5; // Number of options in the Calculator menu - to be updated as Calculator is
+											// updated
+		int choice = 0; // Placeholder
 		boolean exit = false;
-		
-		do {                // Do while choice is not to exit
+
+		do { // Do while choice is not to exit
 			displayMainMenu();
-			choice = getIntegerInput(input);			
-			switch(choice) {
-				case 1://Costs Calculator
-					executeCalculatorMenu(friends, input, numOfCalculatorMenuChoices);
-					break;
-				case 2://Weather
-			        weather(input);
-			        break;
-				case 3://Exit
-					System.out.println("Exiting...");
-					exit = true;
-					break;
-				default:
-					System.out.println("This is not a valid choice. Please reenter a number between 1 and " + numOfMainMenuChoices + ".");
+			choice = getIntegerInput(input);
+			switch (choice) {
+			case 1:// Costs Calculator
+				executeCalculatorMenu(friends, input, numOfCalculatorMenuChoices);
+				break;
+			case 2:// Weather
+				weather(input);
+				break;
+			case 3: // Itinerary
+				itinerary(input, friends);
+				break;
+			case 4:// Exit
+				System.out.println("Exiting...");
+				exit = true;
+				break;
+			default:
+				System.out.println("This is not a valid choice. Please reenter a number between 1 and "
+						+ numOfMainMenuChoices + ".");
 			}
-		}while(!exit);
+		} while (!exit);
+
+	}
+
+	private static void itinerary(Scanner input, ArrayList<Friend> friends) {
+		
+		// TODO - DEPENDING ON THE CHOICE, EITHER OFFER AN OPTION TO ADD AN ACTIVITY OR
+		boolean exit = false;
+		do {
+
+			displayItineraryMenu();
+			int choice = getIntegerInput(input);
+			switch (choice) {
+			case 1:
+				getFriendActivities(friends, findFriend(friends, input), input);
+				break;
+			case 2:
+				displaySortedItinerary(friends);
+				break;
+			case 3:
+				exit = true;
+				break;
+			default:
+				System.out.println("Invalid Choice");
+			}
+			// DISPLAY THE ITINERARY
+		} while (!exit);
+
+	}
+
+	private static void displaySortedItinerary(ArrayList<Friend> friends) {
+		ArrayList<Activity> allActivities = new ArrayList<>();
+		
+		for(Friend friend : friends) {
+			allActivities.addAll(friend.getActivities());
+		}
+		
+		Collections.sort(allActivities);
+		
+		for(Activity activity : allActivities) {
+			System.out.println(activity);
+		}
 		
 	}
 
+	private static void displayItineraryMenu() {
+		System.out.println("TODO - MENU - CHOICE 1: ADD ACTIVITY, CHOICE 2: DISPLAY ITINERARY, CHOICE 3: EXIT");
+
+	}
+
 	/**
-	 * @param input Scanner for user input
-	 * This method organizes the method calls to execute the weather functionality
+	 * @param input Scanner for user input This method organizes the method calls to
+	 *              execute the weather functionality
 	 */
 	public static void weather(Scanner input) {
 		String city = getCityChoiceFromUser(input);
@@ -45,16 +97,15 @@ public class Main {
 
 	/**
 	 * 
-	 * @param input Scanner for user input
-	 * Gets and validates user choice for degrees in C or F
+	 * @param input Scanner for user input Gets and validates user choice for
+	 *              degrees in C or F
 	 * @return C or F
 	 */
 	public static char getMeasurementTypeFromUser(Scanner input) {
 		System.out.print("Would you like the temperature in °C or °F? ");
 		char temp = input.nextLine().toUpperCase().charAt(0);
 		while (temp != 'C' && temp != 'F') {
-			System.out.print("Invalid. Please enter either a "
-					+ "C for celsius or a F for fahrenheit. ");
+			System.out.print("Invalid. Please enter either a " + "C for celsius or a F for fahrenheit. ");
 			temp = input.nextLine().toUpperCase().charAt(0);
 		}
 		return temp;
@@ -62,8 +113,7 @@ public class Main {
 
 	/**
 	 * 
-	 * @param input Scanner for User Input
-	 * Gets the city choice from the user
+	 * @param input Scanner for User Input Gets the city choice from the user
 	 * @return City Name
 	 */
 	public static String getCityChoiceFromUser(Scanner input) {
@@ -74,8 +124,8 @@ public class Main {
 
 	/**
 	 * 
-	 * @param friends ArrayList of Friends
-	 * Calculate which friend pays for what, print results
+	 * @param friends ArrayList of Friends Calculate which friend pays for what,
+	 *                print results
 	 */
 	public static void calculateFriendPayments(ArrayList<Friend> friends) {
 		System.out.println(" **** Calculate All Payments **** ");
@@ -91,8 +141,10 @@ public class Main {
 		System.out.println("Please choose one of the following options:");
 		System.out.println("1. Payments Calculator");
 		System.out.println("2. Find out the weather in your location");
-		System.out.println("3. Exit");
+		System.out.println("3. Display your sorted itinerary");
+		System.out.println("4. Exit");
 	}
+
 	/**
 	 * This method will display the cost calculator menu.
 	 */
@@ -105,87 +157,98 @@ public class Main {
 		System.out.println("5. Calculate All Payments");
 		System.out.println("6. Exit");
 	}
+
 	/**
-	 * This method will display the cost calculator menu and then handle option choice, calling the necessary methods.
+	 * This method will display the cost calculator menu and then handle option
+	 * choice, calling the necessary methods.
 	 */
 	public static void executeCalculatorMenu(ArrayList<Friend> friends, Scanner input, int numOfCalculatorMenuChoices) {
-		int numOfMenuChoices=numOfCalculatorMenuChoices;
+		int numOfMenuChoices = numOfCalculatorMenuChoices;
 		int choice;
-		boolean exit=false;
-		do{
+		boolean exit = false;
+		do {
 			displayPaymentsCalculatorMenu();
-			choice = getIntegerInput(input);	
+			choice = getIntegerInput(input);
 
-			switch(choice) {
-				case 1: //2. Add Friends
-					getFriends(friends, input);
-					break;
-				case 2: //3. Add Items
-					getFriendItems(friends, findFriend(friends, input), input);
-					break;
-				case 3:
-					getFriendActivities(friends, findFriend(friends, input), input);
-					break;
-				case 4:
-					displayAllFriends(friends);
-					break;
-				case 5:
-					calculateFriendPayments(friends);
-					break;
-				case 6:
-					System.out.println("Exiting...");
-					exit = true;
-					break;
-				default:
-					System.out.println("This is not a valid choice. Please reenter a number between 1 and " + numOfMenuChoices + ".");
+			switch (choice) {
+			case 1: // 2. Add Friends
+				getFriends(friends, input);
+				break;
+			case 2: // 3. Add Items
+				getFriendItems(friends, findFriend(friends, input), input);
+				break;
+			case 3:
+				getFriendActivities(friends, findFriend(friends, input), input);
+				break;
+			case 4:
+				displayAllFriends(friends);
+				break;
+			case 5:
+				calculateFriendPayments(friends);
+				break;
+			case 6:
+				System.out.println("Exiting...");
+				exit = true;
+				break;
+			default:
+				System.out.println(
+						"This is not a valid choice. Please reenter a number between 1 and " + numOfMenuChoices + ".");
 			}
-		}while(!exit);
+		} while (!exit);
 	}
+
 	/**
-	 * This method validates that the response from the user is an integer, if it is not an integer it continues to reprompt the user until the 
-	 * response is an integer.
+	 * This method validates that the response from the user is an integer, if it is
+	 * not an integer it continues to reprompt the user until the response is an
+	 * integer.
+	 * 
 	 * @param input Scanner for reading user input.
 	 * @return The integer value from the user.
 	 */
 	public static int getIntegerInput(Scanner input) {
 		int answer = 0;
 		boolean validInput = false;
-		while(!validInput) {
+		while (!validInput) {
 			try {
 				answer = input.nextInt();
 				validInput = true;
-			}catch (InputMismatchException e) {
+			} catch (InputMismatchException e) {
 				System.out.println("That is not an integer. Please enter an integer.");
-				input.nextLine(); //clear invalid input
+				input.nextLine(); // clear invalid input
 			}
 		}
-		input.nextLine(); //clear buffer
+		input.nextLine(); // clear buffer
 		return answer;
 	}
+
 	/**
-	 * This method validates that the response from the user is a double, if it not a double it continues to reprompt the user until the response
-	 * is a double.
+	 * This method validates that the response from the user is a double, if it not
+	 * a double it continues to reprompt the user until the response is a double.
+	 * 
 	 * @param input Scanner for reading user input.
 	 * @return The double value from the user.
 	 */
 	public static double getDoubleInput(Scanner input) {
 		double answer = 0.0;
 		boolean validInput = false;
-		while(!validInput) {
+		while (!validInput) {
 			try {
 				answer = input.nextDouble();
 				validInput = true;
-			}catch (InputMismatchException e) {
+			} catch (InputMismatchException e) {
 				System.out.println("Invalid input. Please try again: ");
-				input.nextLine(); //clear invalid input
+				input.nextLine(); // clear invalid input
 			}
 		}
-		input.nextLine(); //clear buffer 
+		input.nextLine(); // clear buffer
 		return answer;
-		
+
 	}
+
 	/**
-	 * This method collects a list of friends (validating that a all friends names are unique), their purchased items and activities.
+	 * This method collects a list of friends (validating that a all friends names
+	 * are unique), their purchased items and activities.
+	 * 
 	 * @param input Scanner for reading user input.
 	 * @return An ArrayList of Friend objects.
 	 */
@@ -193,156 +256,196 @@ public class Main {
 		boolean addFriends = true;
 		boolean addItems;
 		boolean addActivities;
-		while(addFriends) {
+		while (addFriends) {
 			System.out.print("Friend Name: >> ");
 			String name = input.nextLine();
-			
-			if(duplicateName(friends, name)) {
+
+			if (duplicateName(friends, name)) {
 				System.out.println("Friend already exists");
-			}else {
+			} else {
 				System.out.print("Zelle Information: >> ");
 				String zelleInfo = input.nextLine();
 				friends.add(new Friend(name, zelleInfo));
-				
-				addItems= getYesOrNoChoice(input, "Add Items to Friend? ");
-				if(addItems) {
-					getFriendItems(friends, friends.size()-1, input);
+
+				addItems = getYesOrNoChoice(input, "Add Items to Friend? ");
+				if (addItems) {
+					getFriendItems(friends, friends.size() - 1, input);
 				}
-				
+
 				addActivities = getYesOrNoChoice(input, "Add Activities to Friend? ");
-				if(addActivities) {
+				if (addActivities) {
 					getFriendActivities(friends, friends.size() - 1, input);
 				}
-				
+
 				addFriends = getYesOrNoChoice(input, "Continue adding friends? ");
 			}
-			
+
 		}
 	}
+
 	/**
-	 * This method checks if a friend with the specified name already exists in the friends arrayList.
-	 * If a duplicate name is found, it returns true. If not a duplicate name, returns false.
+	 * This method checks if a friend with the specified name already exists in the
+	 * friends arrayList. If a duplicate name is found, it returns true. If not a
+	 * duplicate name, returns false.
+	 * 
 	 * @param friends An ArrayList of Friend objects.
-	 * @param name The specified name
+	 * @param name    The specified name
 	 */
 	public static boolean duplicateName(ArrayList<Friend> friends, String name) {
-		for(Friend friend : friends) {
-			if(friend.getFriendName().equalsIgnoreCase(name)) {
+		for (Friend friend : friends) {
+			if (friend.getFriendName().equalsIgnoreCase(name)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * This method collects items purchased by a Friend.
+	 * 
 	 * @param friends The ArrayList of Friends.
-	 * @param index The index in the friends arrayList of the friends to add to.
-	 * @param input Scanner for reading user input.
+	 * @param index   The index in the friends arrayList of the friends to add to.
+	 * @param input   Scanner for reading user input.
 	 */
-	public static void getFriendItems(ArrayList<Friend> friends, int index, Scanner input){
+	public static void getFriendItems(ArrayList<Friend> friends, int index, Scanner input) {
 		boolean addItems;
 		do {
 			System.out.println("Enter Item Bought: ");
-			
+
 			System.out.print("Item Name >> ");
 			String itemName = input.nextLine();
-			
+
 			System.out.print("Item Price >> ");
 			double price = verifyPrice(input);
-			
+
 			System.out.print("Item Quantity >> ");
 			int quantity = verifyQuantity(input);
-			
-			
+
 			friends.get(index).addItem(new Item(itemName, price, quantity));
-			addItems= getYesOrNoChoice(input, "Continue adding items?");
-		}while(addItems);
+			addItems = getYesOrNoChoice(input, "Continue adding items?");
+		} while (addItems);
 	}
+
 	/**
 	 * This method collects activities purchased by a Friend.
+	 * 
 	 * @param friends The ArrayList of Friends.
-	 * @param index The index in the friends arrayList of the friends to add to.
-	 * @param input Scanner for reading user input.
+	 * @param index   The index in the friends arrayList of the friends to add to.
+	 * @param input   Scanner for reading user input.
 	 */
 	public static void getFriendActivities(ArrayList<Friend> friends, int index, Scanner input) {
 		boolean addActivities;
 		do {
 			System.out.println("Enter Activity Name: ");
-			
+
 			System.out.println("Activity Name >> ");
 			String activityName = input.nextLine();
-			
+
 			System.out.println("Activity Price >> ");
 			double price = verifyPrice(input);
-			
-			friends.get(index).addActivity(new Activity(activityName, price));
-			addActivities = getYesOrNoChoice(input, "Continue adding activities?");
-		}while(addActivities);
+
+			int year, month, day, hour, minute;
+			do {
+				System.out.println("Activity Date (Year) >> ");
+				year = getIntegerInput(input);
+			} while (year < LocalDateTime.now().getYear()); // Can't be in the past
+
+			do {
+				System.out.println("Activity Date (Month) >> ");
+				month = getIntegerInput(input);
+			} while (month < 1 || month > 12);
+
+			do {
+				System.out.println("Activity Date (Day) >> ");
+				day = getIntegerInput(input);
+			} while (day < 1 || day > 31); // TODO - Provide better input validation here!!
+
+			do {
+				System.out.println("Activity Time (Hour) >> ");
+				hour = getIntegerInput(input);
+			} while (hour < 1 || hour > 24);
+
+			do {
+				System.out.println("Activity Time (Minute) >> ");
+				minute = getIntegerInput(input);
+			} while (minute < 1 || minute > 60);
+
+			friends.get(index).addActivity(new Activity(activityName, price, year, month, day, hour, minute));
+			addActivities = getYesOrNoChoice(input, "Continue adding activities paid from this friend?");
+		} while (addActivities);
 	}
-	
+
 	/**
 	 * Asks user for Friend to add to, and returns the index of the chosen friend
+	 * 
 	 * @param friends ArrayList of Friend objects
-	 * @param input Scanner for user input
+	 * @param input   Scanner for user input
 	 * @return index of chosen friend
 	 */
 	public static int findFriend(ArrayList<Friend> friends, Scanner input) {
- 		boolean friendFound=false;
- 		String friend;
- 		while(!friendFound) {
- 			System.out.print("Friend to add to >> ");
- 			friend=input.nextLine();
- 			for(int i=0;i<friends.size();i++) {
- 				if(friend.equalsIgnoreCase(friends.get(i).getFriendName())) {
- 					return i;
- 				}
- 			}
- 			System.out.println("Friend not found, please try again:");
- 		}
-		return 0; //extraneous, but allows it to compile
+		boolean friendFound = false;
+		String friend;
+		while (!friendFound) {
+			System.out.print("Friend to add to >> ");
+			friend = input.nextLine();
+			for (int i = 0; i < friends.size(); i++) {
+				if (friend.equalsIgnoreCase(friends.get(i).getFriendName())) {
+					return i;
+				}
+			}
+			System.out.println("Friend not found, please try again:");
+		}
+		return 0; // extraneous, but allows it to compile
 	}
+
 	/**
-	 * This method verifies that the price is a valid positive double value (greater than 0).
+	 * This method verifies that the price is a valid positive double value (greater
+	 * than 0).
+	 * 
 	 * @param input Scanner for reading user input.
 	 * @return The validated price (greater than 0).
 	 */
 	public static double verifyPrice(Scanner input) {
 		double price = 0;
 		boolean validInput = false;
-		
-		while(!validInput) {
+
+		while (!validInput) {
 			price = getDoubleInput(input);
-			if(price > 0) {
+			if (price >= 0) {
 				validInput = true;
-			}else {
-				System.out.println("Invalid price. Must be greater than 0.");
+			} else {
+				System.out.println("Invalid price. Must be greater or equal to 0.");
 			}
 		}
 		return price;
 	}
+
 	/**
-	 * This method verifies that the quantity is a valid positive integer (1 or greater).
+	 * This method verifies that the quantity is a valid positive integer (1 or
+	 * greater).
+	 * 
 	 * @param input Scanner for reading user input.
 	 * @return The validated quantity (greater than or equal to 1).
 	 */
 	public static int verifyQuantity(Scanner input) {
 		int quantity = 0;
 		boolean validInput = false;
-		
-		while(!validInput) {
+
+		while (!validInput) {
 			quantity = getIntegerInput(input);
-			if(quantity >= 1) {
+			if (quantity >= 1) {
 				validInput = true;
-			}else {
+			} else {
 				System.out.println("Invalid quantity. Must be 1 or greater.");
 			}
 		}
 		return quantity;
 	}
+
 	/**
 	 * This method prompts the user for a yes('Y') or no('N') choice.
-	 * @param input Scanner for reading user input.
+	 * 
+	 * @param input   Scanner for reading user input.
 	 * @param message The passed in message to display.
 	 * @return If this user chooses 'Y' then true, false otherwise.
 	 */
@@ -352,40 +455,40 @@ public class Main {
 			System.out.print(message);
 			System.out.print(" Y / N >> ");
 			answer = input.nextLine().toUpperCase().charAt(0);
-		}while(answer != 'Y' && answer != 'N');
-		
-		if(answer == 'Y') {
+		} while (answer != 'Y' && answer != 'N');
+
+		if (answer == 'Y') {
 			return true;
 		}
 		return false;
 	}
-	
 
-	/**  
-	 * This method displays all the Friends, their Items name and price and quantity, and their Activities name and price.
+	/**
+	 * This method displays all the Friends, their Items name and price and
+	 * quantity, and their Activities name and price.
+	 * 
 	 * @param friends The ArrayList of Friend objects.
 	 */
 
 	public static void displayAllFriends(ArrayList<Friend> friends) {
-		if(friends.isEmpty()) {
+		if (friends.isEmpty()) {
 			System.out.println("No friends added yet.");
 			return;
-		}
-		else{
+		} else {
 			System.out.println("***Friends, their items, and their activities***");
-			for(Friend friend : friends) {
+			for (Friend friend : friends) {
 				System.out.println("Friend: " + friend.getFriendName());
-				
-				if(friend.getItems().isEmpty()) 
+
+				if (friend.getItems().isEmpty())
 					System.out.println("No items added.");
 				else {
-					for(Item item : friend.getItems()) 
+					for (Item item : friend.getItems())
 						System.out.println(item.toString());
 				}
-				if(friend.getActivities().isEmpty()) 
+				if (friend.getActivities().isEmpty())
 					System.out.println("No activities added.");
 				else {
-					for(Activity activity : friend.getActivities()) 
+					for (Activity activity : friend.getActivities())
 						System.out.println(activity.toString());
 				}
 			}

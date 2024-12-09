@@ -184,6 +184,7 @@ public class Main {
 				displayAllFriends(friends);
 				break;
 			case 5:
+				displayTripTotal(friends);
 				calculateFriendPayments(friends);
 				break;
 			case 6:
@@ -195,6 +196,26 @@ public class Main {
 						"This is not a valid choice. Please reenter a number between 1 and " + numOfMenuChoices + ".");
 			}
 		} while (!exit);
+	}
+	/**
+	 * This method calculates the trip total.
+	 * @param friends The ArrayList of Friends.
+	 * @return The total cost of the trip.
+	 */
+	public static double calculateTripTotal(ArrayList<Friend> friends) {
+		double total = 0.0;
+		for(Friend friend : friends) {
+			total += friend.getTotalSpent();
+		}
+		return total;
+	}
+	/**
+	 * This method displays the trip total.
+	 * @param friends The ArrayList of Friends.
+	 */
+	public static void displayTripTotal(ArrayList<Friend> friends) {
+		double total = calculateTripTotal(friends);
+		System.out.println("The total spend on the trip so far is: $" + String.format("%.2f", total));
 	}
 
 	/**

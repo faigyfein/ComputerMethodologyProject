@@ -331,6 +331,8 @@ public class Main {
 	public static void getFriendItems(ArrayList<Friend> friends, int index, Scanner input) {
 		boolean addItems;
 		do {
+			if (index == -1)
+				break;
 			System.out.println("Enter Item Bought: ");
 
 			System.out.print("Item Name >> ");
@@ -357,6 +359,8 @@ public class Main {
 	public static void getFriendActivities(ArrayList<Friend> friends, int index, Scanner input) {
 		boolean addActivities;
 		do {
+			if (index == -1)
+				break;
 			System.out.println("Enter Activity Name: ");
 
 			System.out.println("Activity Name >> ");
@@ -406,6 +410,7 @@ public class Main {
 	public static int findFriend(ArrayList<Friend> friends, Scanner input) {
 		boolean friendFound = false;
 		String friend;
+		int tryCount = 0;
 		while (!friendFound) {
 			System.out.print("Friend to add to >> ");
 			friend = input.nextLine();
@@ -415,8 +420,13 @@ public class Main {
 				}
 			}
 			System.out.println("Friend not found, please try again:");
+			tryCount++;
+			if (tryCount==3) {
+				System.out.println("Exiting. Too many attempts were tried\n");
+				break;
+			}
 		}
-		return 0; // extraneous, but allows it to compile
+		return -1; // extraneous, but allows it to compile
 	}
 
 	/**

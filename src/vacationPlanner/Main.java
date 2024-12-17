@@ -39,8 +39,6 @@ public class Main {
 	}
 
 	private static void itinerary(Scanner input, ArrayList<Friend> friends) {
-		
-		// TODO - DEPENDING ON THE CHOICE, EITHER OFFER AN OPTION TO ADD AN ACTIVITY OR
 		boolean exit = false;
 		do {
 
@@ -59,7 +57,6 @@ public class Main {
 			default:
 				System.out.println("Invalid Choice");
 			}
-			// DISPLAY THE ITINERARY
 		} while (!exit);
 
 	}
@@ -80,7 +77,10 @@ public class Main {
 	}
 
 	private static void displayItineraryMenu() {
-		System.out.println("TODO - MENU - CHOICE 1: ADD ACTIVITY, CHOICE 2: DISPLAY ITINERARY, CHOICE 3: EXIT");
+		System.out.println("ITINERARY MENU");
+		System.out.println("1) Add Activity (Paying Friend must already exist)");
+		System.out.println("2) Display Itinerary ");
+		System.out.println("3) Exit");
 
 	}
 

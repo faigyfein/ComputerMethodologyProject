@@ -361,37 +361,37 @@ public class Main {
 		do {
 			if (index == -1)
 				break;
-			System.out.println("Enter Activity Name: ");
+			System.out.print("Enter Activity Name: ");
 
-			System.out.println("Activity Name >> ");
+			System.out.print("Activity Name >> ");
 			String activityName = input.nextLine();
 
-			System.out.println("Activity Price >> ");
+			System.out.print("Activity Price >> ");
 			double price = verifyPrice(input);
 
 			int year, month, day, hour, minute;
 			do {
-				System.out.println("Activity Date (Year) >> ");
+				System.out.print("Activity Date (Year) >> ");
 				year = getIntegerInput(input);
 			} while (year < LocalDateTime.now().getYear()); // Can't be in the past
 
 			do {
-				System.out.println("Activity Date (Month) >> ");
+				System.out.print("Activity Date (Month) >> ");
 				month = getIntegerInput(input);
 			} while (month < 1 || month > 12);
 
 			do {
-				System.out.println("Activity Date (Day) >> ");
+				System.out.print("Activity Date (Day) >> ");
 				day = getIntegerInput(input);
 			} while (day < 1 || day > 31); // TODO - Provide better input validation here!!
 
 			do {
-				System.out.println("Activity Time (Hour) >> ");
+				System.out.print("Activity Time (Hour) >> ");
 				hour = getIntegerInput(input);
 			} while (hour < 1 || hour > 24);
 
 			do {
-				System.out.println("Activity Time (Minute) >> ");
+				System.out.print("Activity Time (Minute) >> ");
 				minute = getIntegerInput(input);
 			} while (minute < 1 || minute > 60);
 

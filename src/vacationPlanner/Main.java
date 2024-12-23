@@ -39,8 +39,6 @@ public class Main {
 	}
 
 	private static void itinerary(Scanner input, ArrayList<Friend> friends) {
-		
-		// TODO - DEPENDING ON THE CHOICE, EITHER OFFER AN OPTION TO ADD AN ACTIVITY OR
 		boolean exit = false;
 		do {
 
@@ -59,28 +57,30 @@ public class Main {
 			default:
 				System.out.println("Invalid Choice");
 			}
-			// DISPLAY THE ITINERARY
 		} while (!exit);
 
 	}
 
 	private static void displaySortedItinerary(ArrayList<Friend> friends) {
 		ArrayList<Activity> allActivities = new ArrayList<>();
-		
-		for(Friend friend : friends) {
+
+		for (Friend friend : friends) {
 			allActivities.addAll(friend.getActivities());
 		}
-		
+
 		Collections.sort(allActivities);
-		
-		for(Activity activity : allActivities) {
+
+		for (Activity activity : allActivities) {
 			System.out.println(activity);
 		}
-		
+
 	}
 
 	private static void displayItineraryMenu() {
-		System.out.println("TODO - MENU - CHOICE 1: ADD ACTIVITY, CHOICE 2: DISPLAY ITINERARY, CHOICE 3: EXIT");
+		System.out.println("ITINERARY MENU");
+		System.out.println("1) Add Activity (Paying Friend must already exist)");
+		System.out.println("2) Display Itinerary ");
+		System.out.println("3) Exit");
 
 	}
 
@@ -197,20 +197,24 @@ public class Main {
 			}
 		} while (!exit);
 	}
+
 	/**
 	 * This method calculates the trip total.
+	 * 
 	 * @param friends The ArrayList of Friends.
 	 * @return The total cost of the trip.
 	 */
 	public static double calculateTripTotal(ArrayList<Friend> friends) {
 		double total = 0.0;
-		for(Friend friend : friends) {
+		for (Friend friend : friends) {
 			total += friend.getTotalSpent();
 		}
 		return total;
 	}
+
 	/**
 	 * This method displays the trip total.
+	 * 
 	 * @param friends The ArrayList of Friends.
 	 */
 	public static void displayTripTotal(ArrayList<Friend> friends) {
@@ -268,7 +272,7 @@ public class Main {
 
 	/**
 	 * This method collects a list of friends (validating that a all friends names
-	 * are unique), their purchased items and activities.
+	 * and zelle combination are unique), their purchased items and activities.
 	 * 
 	 * @param input Scanner for reading user input.
 	 * @return An ArrayList of Friend objects.
@@ -280,14 +284,13 @@ public class Main {
 		while (addFriends) {
 			System.out.print("Friend Name: >> ");
 			String name = input.nextLine();
-
-			if (duplicateName(friends, name)) {
+			System.out.print("Zelle Information: >> ");
+			String zelleInfo = input.nextLine();
+			if (duplicateFriend(friends, name, zelleInfo)) {
 				System.out.println("Friend already exists");
-			} else {
-				System.out.print("Zelle Information: >> ");
-				String zelleInfo = input.nextLine();
+			} 
+			else {
 				friends.add(new Friend(name, zelleInfo));
-
 				addItems = getYesOrNoChoice(input, "Add Items to Friend? ");
 				if (addItems) {
 					getFriendItems(friends, friends.size() - 1, input);
@@ -296,26 +299,27 @@ public class Main {
 				addActivities = getYesOrNoChoice(input, "Add Activities to Friend? ");
 				if (addActivities) {
 					getFriendActivities(friends, friends.size() - 1, input);
-				}
-
-				addFriends = getYesOrNoChoice(input, "Continue adding friends? ");
+				}				
 			}
-
+			addFriends = getYesOrNoChoice(input, "Continue adding friends? ");
 		}
 	}
 
 	/**
-	 * This method checks if a friend with the specified name already exists in the
-	 * friends arrayList. If a duplicate name is found, it returns true. If not a
-	 * duplicate name, returns false.
+	 * This method checks if a friend with the specified name and zelle informaation
+	 * already exists in the friends arrayList. If a duplicate name and zelle
+	 * information is found, it returns true. If not both, returns false.
 	 * 
 	 * @param friends An ArrayList of Friend objects.
 	 * @param name    The specified name
+	 * @param zelle   Zelle contact
 	 */
-	public static boolean duplicateName(ArrayList<Friend> friends, String name) {
+	public static boolean duplicateFriend(ArrayList<Friend> friends, String name, String zelle) {
 		for (Friend friend : friends) {
 			if (friend.getFriendName().equalsIgnoreCase(name)) {
-				return true;
+				if (friend.getZelleInfo().equalsIgnoreCase(zelle)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -421,7 +425,7 @@ public class Main {
 			}
 			System.out.println("Friend not found, please try again:");
 			tryCount++;
-			if (tryCount==3) {
+			if (tryCount == 3) {
 				System.out.println("Exiting. Too many attempts were tried\n");
 				break;
 			}

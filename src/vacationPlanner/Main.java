@@ -38,10 +38,15 @@ public class Main {
 
 	}
 
+	/**
+	 * Itinerary options
+	 * 
+	 * @param input   Scanner of keyboard input
+	 * @param friends ArrayList of friends for tracking payments of activities
+	 */
 	private static void itinerary(Scanner input, ArrayList<Friend> friends) {
 		boolean exit = false;
 		do {
-
 			displayItineraryMenu();
 			int choice = getIntegerInput(input);
 			switch (choice) {
@@ -61,21 +66,33 @@ public class Main {
 
 	}
 
+	/**
+	 * Display all activities in order of date and time
+	 * 
+	 * @param friends Friends arraylist where activities are stored in corresponding
+	 *                paying friend
+	 */
 	private static void displaySortedItinerary(ArrayList<Friend> friends) {
 		ArrayList<Activity> allActivities = new ArrayList<>();
 
+		// Get all activities from all friends (activities reside in the paying friend)
 		for (Friend friend : friends) {
 			allActivities.addAll(friend.getActivities());
 		}
 
+		// Sort the collection of activities by the date and time
 		Collections.sort(allActivities);
 
+		// Print all activities
 		for (Activity activity : allActivities) {
 			System.out.println(activity);
 		}
 
 	}
 
+	/**
+	 * Display the itinerary menu options
+	 */
 	private static void displayItineraryMenu() {
 		System.out.println("ITINERARY MENU");
 		System.out.println("1) Add Activity (Paying Friend must already exist)");
@@ -286,10 +303,9 @@ public class Main {
 			String name = input.nextLine();
 			System.out.print("Zelle Information: >> ");
 			String zelleInfo = input.nextLine();
-			if (duplicateFriend(friends, name, zelleInfo)) {
+			if (duplicateFriend(friends, name, zelleInfo)) { // Make sure the friend does not already exist
 				System.out.println("Friend already exists");
-			} 
-			else {
+			} else {
 				friends.add(new Friend(name, zelleInfo));
 				addItems = getYesOrNoChoice(input, "Add Items to Friend? ");
 				if (addItems) {
@@ -299,7 +315,7 @@ public class Main {
 				addActivities = getYesOrNoChoice(input, "Add Activities to Friend? ");
 				if (addActivities) {
 					getFriendActivities(friends, friends.size() - 1, input);
-				}				
+				}
 			}
 			addFriends = getYesOrNoChoice(input, "Continue adding friends? ");
 		}
@@ -387,7 +403,7 @@ public class Main {
 			do {
 				System.out.print("Activity Date (Day) >> ");
 				day = getIntegerInput(input);
-			} while (day < 1 || day > 31); // TODO - Provide better input validation here!!
+			} while (day < 1 || day > 31);
 
 			do {
 				System.out.print("Activity Time (Hour) >> ");

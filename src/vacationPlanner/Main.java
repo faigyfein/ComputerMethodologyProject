@@ -236,7 +236,7 @@ public class Main {
 	 */
 	public static void displayTripTotal(ArrayList<Friend> friends) {
 		double total = calculateTripTotal(friends);
-		System.out.println("The total spend on the trip so far is: $" + String.format("%.2f", total));
+		System.out.printf("The total spent on the trip so far is: $%.2f", total);
 	}
 
 	/**
@@ -381,7 +381,7 @@ public class Main {
 		do {
 			if (index < 0)
 				break;
-			System.out.print("Enter Activity Name: ");
+			System.out.print("Enter: \n");
 
 			System.out.print("Activity Name >> ");
 			String activityName = input.nextLine();
@@ -417,12 +417,12 @@ public class Main {
 				do {
 					System.out.print("Activity Time (Hour) >> ");
 					hour = getIntegerInput(input);
-				} while (hour < 1 || hour > 24);
+				} while (hour < 0 || hour > 24);
 
 				do {
 					System.out.print("Activity Time (Minute) >> ");
 					minute = getIntegerInput(input);
-				} while (minute < 1 || minute > 60);
+				} while (minute < 0 || minute > 60);
 
 				try {
 					activityDate = LocalDateTime.of(year, month, day, hour, minute);

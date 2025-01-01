@@ -12,7 +12,7 @@ public class Weather {
 																				// key
 	private static final String BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
 
-	public static void getWeather(String city, char temp) {
+	public static String getWeather(String city, char temp) {
 		try {
 			String urlString = BASE_URL + "?q=" + city + "&appid=" + API_KEY + "&units=metric"; // Metric units
 			URL url = new URL(urlString);
@@ -34,18 +34,16 @@ public class Weather {
 				JSONObject jsonResponse = new JSONObject(response.toString());
 				double Ctemp = jsonResponse.getJSONObject("main").getDouble("temp");
 				if (temp == 'C')
-					System.out.println("Weather in " + city + ": " + Ctemp + "°C");
+					return String.format("Weather in %s: %.2f °C", city, Ctemp);
 				else {
 					double Ftemp = (Ctemp * 1.8) + 32;
-					System.out.print("Weather in " + city + ": ");
-					System.out.printf("%.2f", Ftemp);
-					System.out.println("°F");
+					return String.format("Weather in %s: %.2f °F", city, Ftemp);
 				}
 			} else {
-				System.out.println("Sorry, " + city + " is not a city.");
+				return String.format("Sorry, %s is not a city.", city);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			return e.getMessage();
 		}
 	}
 }

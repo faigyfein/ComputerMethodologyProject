@@ -108,8 +108,8 @@ public class Main {
 	public static void weather(Scanner input) {
 		String city = getCityChoiceFromUser(input);
 		char temp = getMeasurementTypeFromUser(input);
-		Weather.getWeather(city, temp);
-		System.out.println();
+		String message = Weather.getWeather(city, temp);
+		System.out.println(message);
 	}
 
 	/**
@@ -351,7 +351,7 @@ public class Main {
 	public static void getFriendItems(ArrayList<Friend> friends, int index, Scanner input) {
 		boolean addItems;
 		do {
-			if (index == -1)
+			if (index < 0)
 				break;
 			System.out.println("Enter Item Bought: ");
 
@@ -379,7 +379,7 @@ public class Main {
 	public static void getFriendActivities(ArrayList<Friend> friends, int index, Scanner input) {
 		boolean addActivities;
 		do {
-			if (index == -1)
+			if (index < 0)
 				break;
 			System.out.print("Enter Activity Name: ");
 
@@ -389,33 +389,50 @@ public class Main {
 			System.out.print("Activity Price >> ");
 			double price = verifyPrice(input);
 
-			int year, month, day, hour, minute;
+			LocalDateTime activityDate = null;
+			boolean dateInvalid;
 			do {
-				System.out.print("Activity Date (Year) >> ");
-				year = getIntegerInput(input);
-			} while (year < LocalDateTime.now().getYear()); // Can't be in the past
+				// Note that there is basic input validation for a more enjoyable user
+				// experience in which
+				// if a specific section is entered incorrectly, the program will automatically
+				// prompt a new response
+				// However, there is greater input validation when actually converting to a
+				// DateTime object to catch edge cases
+				int year, month, day, hour, minute;
+				do {
+					System.out.print("Activity Date (Year) >> ");
+					year = getIntegerInput(input);
+				} while (year < LocalDateTime.now().getYear()); // Can't be in the past
 
-			do {
-				System.out.print("Activity Date (Month) >> ");
-				month = getIntegerInput(input);
-			} while (month < 1 || month > 12);
+				do {
+					System.out.print("Activity Date (Month) >> ");
+					month = getIntegerInput(input);
+				} while (month < 1 || month > 12);
 
-			do {
-				System.out.print("Activity Date (Day) >> ");
-				day = getIntegerInput(input);
-			} while (day < 1 || day > 31);
+				do {
+					System.out.print("Activity Date (Day) >> ");
+					day = getIntegerInput(input);
+				} while (day < 1 || day > 31);
 
-			do {
-				System.out.print("Activity Time (Hour) >> ");
-				hour = getIntegerInput(input);
-			} while (hour < 1 || hour > 24);
+				do {
+					System.out.print("Activity Time (Hour) >> ");
+					hour = getIntegerInput(input);
+				} while (hour < 1 || hour > 24);
 
-			do {
-				System.out.print("Activity Time (Minute) >> ");
-				minute = getIntegerInput(input);
-			} while (minute < 1 || minute > 60);
+				do {
+					System.out.print("Activity Time (Minute) >> ");
+					minute = getIntegerInput(input);
+				} while (minute < 1 || minute > 60);
 
-			friends.get(index).addActivity(new Activity(activityName, price, year, month, day, hour, minute));
+				try {
+					activityDate = LocalDateTime.of(year, month, day, hour, minute);
+					dateInvalid = false;
+				} catch (Exception e) {
+					System.out.println("Not Valid Date - Please try again\n");
+					dateInvalid = true;
+				}
+			} while (dateInvalid);
+			friends.get(index).addActivity(new Activity(activityName, price, activityDate));
 			addActivities = getYesOrNoChoice(input, "Continue adding activities paid from this friend?");
 		} while (addActivities);
 	}
@@ -428,25 +445,30 @@ public class Main {
 	 * @return index of chosen friend
 	 */
 	public static int findFriend(ArrayList<Friend> friends, Scanner input) {
-		boolean friendFound = false;
-		String friend;
+		String friend, zelle;
 		int tryCount = 0;
-		while (!friendFound) {
+		while (tryCount < 3) {
 			System.out.print("Friend to add to >> ");
 			friend = input.nextLine();
+			System.out.print("Friend's Zelle information >> ");
+			zelle = input.nextLine();
 			for (int i = 0; i < friends.size(); i++) {
 				if (friend.equalsIgnoreCase(friends.get(i).getFriendName())) {
-					return i;
+					if (zelle.equalsIgnoreCase(friends.get(i).getZelleInfo())) {
+						return i;
+					}
 				}
 			}
-			System.out.println("Friend not found, please try again:");
+
 			tryCount++;
 			if (tryCount == 3) {
-				System.out.println("Exiting. Too many attempts were tried\n");
-				break;
+				System.out.println("Friend Not Found. Exiting. Too many attempts were tried\n");
+			} else {
+				System.out.println("Friend Not Found, Please Try Again:\n");
 			}
+
 		}
-		return -1; // extraneous, but allows it to compile
+		return -1;
 	}
 
 	/**
